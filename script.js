@@ -1,46 +1,70 @@
-// ================================
+
 // MOBILE NAVIGATION
-// ================================
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
 
-const menuBtn = document.getElementById("menuBtn");
-const navLinks = document.getElementById("navLinks");
+menuToggle.addEventListener("click", function () {
+  navLinks.classList.toggle("active");
 
-menuBtn.addEventListener("click", function () {
-    navLinks.classList.toggle("active");
+  const isOpen = navLinks.classList.contains("active");
+  menuToggle.setAttribute("aria-expanded", isOpen);
+  menuToggle.textContent = isOpen ? "✕" : "☰";
 });
 
-
-// =================================
 // CLOSE MENU AFTER CLICKING A LINK
-// =================================
+const navigationItems = document.querySelectorAll(".nav-links a");
 
-const navItems = document.querySelectorAll(".nav-links a");
-
-navItems.forEach(function (item) {
-
-    item.addEventListener("click", function () {
-
-        navLinks.classList.remove("active");
-
-    });
-
+navigationItems.forEach(function (link) {
+  link.addEventListener("click", function () {
+    navLinks.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.textContent = "☰";
+  });
 });
 
-
-// ================================
-// CONTACT FORM
-// ================================
-
-const contactForm = document.getElementById("contactForm");
+// DEMO CONTACT FORM
+const contactForm = document.getElementById("contact-form");
+const formMessage = document.getElementById("form-message");
 
 contactForm.addEventListener("submit", function (event) {
+  event.preventDefault();
 
-    event.preventDefault();
+  const customerName = document.getElementById("name").value.trim();
 
-    alert(
-        "Thank you for your message! I will get back to you soon."
-    );
+  formMessage.textContent =
+    "Thank you, " + customerName +
+    "! This demonstration form is working. No message has been sent to the cafe.";
 
-    contactForm.reset();
-
+  contactForm.reset();
 });
+
+// SCROLL REVEAL ANIMATIONS
+const revealElements = document.querySelectorAll(".reveal");
+
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver(
+    function (entries, observerInstance) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          observerInstance.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.12
+    }
+  );
+
+  revealElements.forEach(function (element) {
+    observer.observe(element);
+  });
+} else {
+  revealElements.forEach(function (element) {
+    element.classList.add("show");
+  });
+}
+
+// AUTOMATIC FOOTER YEAR
+document.getElementById("year").textContent =
+  new Date().getFullYear();
